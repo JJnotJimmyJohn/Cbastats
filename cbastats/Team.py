@@ -1,4 +1,4 @@
-from CBAStats.GameStats import *
+from cbastats.GameStats import *
 
 
 class Team(GameStats):

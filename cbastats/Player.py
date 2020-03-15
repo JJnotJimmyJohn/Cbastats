@@ -1,4 +1,4 @@
-from CBAStats.GameStats import *
+from cbastats.GameStats import *
 
 
 # todo: develop op_plr (player same position, watch there will be starter and sub)
