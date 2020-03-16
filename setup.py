@@ -12,7 +12,7 @@ with open(os.path.join(HERE, "README.md"),encoding='utf-8') as fid:
 setup(
   name = 'cbastats',
   packages = ['cbastats'],
-  version = 'v0.0.31',
+  version = 'v0.0.4',
   license='MIT',
   long_description=README,
   long_description_content_type="text/markdown",
@@ -20,7 +20,7 @@ setup(
   author = 'Jian Jin',
   author_email = 'jjtt0926@gmail.com',
   url = 'https://github.com/JJ0131/Cbastats',
-  download_url = 'https://github.com/JJ0131/Cbastats/archive/v0.0.31.tar.gz',
+  download_url = 'https://github.com/JJ0131/Cbastats/archive/v0.0.4.tar.gz',
   keywords = ['CBA', 'Baseketball'],
   install_requires=[
           'pandas','tabulate'
