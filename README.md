@@ -56,8 +56,8 @@ All the data are hosted on an AWS MySQL server. A REST API will be built to dist
  
  Import these packages
    
-    from CBAStats.Player import *
-    from CBAStats.Team import *
+    from cbastats.Player import *
+    from cbastats.Team import *
     import datetime
     from sqlalchemy import create_engine
   
