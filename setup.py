@@ -6,13 +6,13 @@ from setuptools import setup
 HERE = os.path.abspath(os.path.dirname(__file__))
 
 # The text of the README file
-with open(os.path.join(HERE, "README.md")) as fid:
+with open(os.path.join(HERE, "README.md"),encoding='utf-8') as fid:
     README = fid.read()
 
 setup(
   name = 'cbastats',
   packages = ['cbastats'],
-  version = 'v0.0.3',
+  version = 'v0.0.31',
   license='MIT',
   long_description=README,
   long_description_content_type="text/markdown",
@@ -20,7 +20,7 @@ setup(
   author = 'Jian Jin',
   author_email = 'jjtt0926@gmail.com',
   url = 'https://github.com/JJ0131/Cbastats',
-  download_url = 'https://github.com/JJ0131/Cbastats/archive/v0.0.3.tar.gz',
+  download_url = 'https://github.com/JJ0131/Cbastats/archive/v0.0.31.tar.gz',
   keywords = ['CBA', 'Baseketball'],
   install_requires=[
           'pandas','tabulate'
