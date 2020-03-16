@@ -62,6 +62,7 @@ All the data are hosted on an AWS MySQL server. A REST API will be built to dist
     from sqlalchemy import create_engine
   
   把数据放入一个pandas dataframe
+  
  Run commands below to load the data into a pandas dataframe
   
     user_name = 'guest'
