@@ -1,4 +1,4 @@
-from cbastats.GameStats import *
+from GameStats import *
 
 
 class Team(GameStats):
@@ -133,6 +133,15 @@ class Team(GameStats):
                         1.07 * (self.op_tm_orb / (self.op_tm_orb + self.tm_drb)) * (self.op_tm_fga - self.op_tm_fg)
                         + self.op_tm_tov)
         )
+    
+    @property
+    def tm_def_poss(self):
+        return 1 * (0 + (
+                        self.op_tm_fga +
+                        0.4 * self.op_tm_fta -
+                        1.07 * (self.op_tm_orb / (self.op_tm_orb + self.tm_drb)) * (self.op_tm_fga - self.op_tm_fg)
+                        + self.op_tm_tov)
+        )
 
     @property
     def op_tm_poss(self):
@@ -170,7 +179,22 @@ class Team(GameStats):
     # -------- advanced stats above (all are pd.series)--------
 
 def main():
-    pass
+    import pandas as pd
+    from sqlalchemy import create_engine
+
+    user_name = 'guest'
+    passcode = 'Guest123456'
+    endpoint = 'cbashuju.ctkaehd5rxxe.us-east-1.rds.amazonaws.com'
+    database = 'CBA_Data'
+    engine = create_engine(f'mysql+pymysql://{user_name}:{passcode}@{endpoint}/{database}')
+
+    connection= engine.connect()
+    df = pd.read_sql("select * from CBA_Data.PlayerStatsPerGame", connection)
+    connection.close()
+    teams = Team('',df)
+    print(teams.tm_pts)
+    print(teams.tm_poss)
+
 
 if __name__ == '__main__':
     main()

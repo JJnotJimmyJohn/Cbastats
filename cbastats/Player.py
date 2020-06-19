@@ -1,6 +1,5 @@
-from cbastats.GameStats import *
-
-
+from GameStats import *
+from Team import *
 # todo: develop op_plr (player same position, watch there will be starter and sub)
 
 
@@ -286,6 +285,15 @@ class Player(GameStats):
                         1.07 * (self.op_tm_orb / (self.op_tm_orb + self.tm_drb)) * (self.op_tm_fga - self.op_tm_fg)
                         + self.op_tm_tov)
         )
+    
+    @property
+    def tm_def_poss(self):
+        return 1 * (0 + (
+                        self.op_tm_fga +
+                        0.4 * self.op_tm_fta -
+                        1.07 * (self.op_tm_orb / (self.op_tm_orb + self.tm_drb)) * (self.op_tm_fga - self.op_tm_fg)
+                        + self.op_tm_tov)
+        )
 
     @property
     def op_tm_poss(self):
@@ -464,18 +472,57 @@ class Player(GameStats):
         """
         return 100 * ((self.plr_fga + 0.44 * self.plr_fta + self.plr_tov) * (self.tm_mp / 5)) / (self.plr_mp * (self.tm_fga + 0.44 * self.tm_fta + self.tm_tov))
 
+    
+
     # -------- advanced stats above (all are pd.series)--------
 
 
 def main():
-    player = Player('易建联')
+    import pandas as pd
+    from sqlalchemy import create_engine
+
+    user_name = 'guest'
+    passcode = 'Guest123456'
+    endpoint = 'cbashuju.ctkaehd5rxxe.us-east-1.rds.amazonaws.com'
+    database = 'CBA_Data'
+    engine = create_engine(f'mysql+pymysql://{user_name}:{passcode}@{endpoint}/{database}')
+
+    connection= engine.connect()
+    df = pd.read_sql("select * from CBA_Data.PlayerStatsPerGame", connection)
+    connection.close()
+    player = Player('易建联',df)
+    teams = Team('',df)
+    
     if player.plr_avg_stats.empty:
         print(f'{player.plr_name}无出场数据')
         exit()
     else:
+        league_pts = sum(teams.tm_pts)
+        league_poss = sum(teams.tm_poss)
+        league_pts_poss = league_pts/league_poss
+        plr_marg_offense = player.plr_pprod.values[0]-0.92*league_pts_poss*player.plr_scposs.values[0]
+        league_pace = teams.tm_pace.mean()
+        league_avg_pts = sum(teams.tm_pts)/sum(teams.tm_ngames)
+        plr_marg_pts_win = 0.32*league_avg_pts*(player.tm_pace.values[0]/league_pace)
+        plr_oWinShare = plr_marg_offense/plr_marg_pts_win
+        
+        # offensive win share
         print(f'{player.plr_name},{player.plr_tm_name}')
-        stats_output(player.plr_total_stats)
-        stats_output(player.plr_avg_stats)
+        print(f"marginal offense is {plr_marg_offense}")
+        print(f"marginal points per win is {plr_marg_pts_win}")
+        print(f"offensive win share is {plr_oWinShare}")
+
+
+        # defensive win share
+        player.plr_drtg
+        plr_marg_defense = (player.plr_mp.values[0]/player.tm_mp.values[0])*player.tm_def_poss.values[0]*(1.08*(league_pts_poss)-((player.plr_drtg.values[0])/100))
+        print(f"marginal defense is {plr_marg_defense}")
+        plr_dWinShare = plr_marg_defense/plr_marg_pts_win
+        print(f"defensive win share is {plr_dWinShare}")
+
+        plr_WinShare = plr_dWinShare + plr_oWinShare
+        print(f"player win share = {plr_WinShare}")
+
 
 
 if __name__ == '__main__':
